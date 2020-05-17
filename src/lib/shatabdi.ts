@@ -3,10 +3,21 @@ import http from 'http'
 require('dotenv').config()
 
 class Shatabdi {
+  req: any
+
+  res: any
+
   port: string
 
   constructor() {
     this.port = `${process.env.PORT}`
+  }
+
+  engine(req: http.RequestOptions, res: http.ServerResponse) {
+    this.req = req
+    this.res = res
+    res.write('Hello World!')
+    res.end()
   }
 
   /**
@@ -17,7 +28,7 @@ class Shatabdi {
    */
   listen(port: number, callback?: any): void {
     try {
-      http.createServer().listen(port || this.port)
+      http.createServer(this.engine).listen(port || this.port)
       if (callback) {
         callback()
       }
