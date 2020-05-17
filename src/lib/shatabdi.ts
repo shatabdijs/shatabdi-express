@@ -38,10 +38,10 @@ class Shatabdi implements framework {
     context.routeMaps.forEach((route: any) => {
       if (route.pattern === req.url) {
         if (route.middleware) {
-          route.middleware(req, res)
+          route.middleware(req, new Response(res))
         }
         if (route.callback) {
-          route.callback(req, res)
+          route.callback(req, new Response(res))
         }
         res.end()
       }

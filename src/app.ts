@@ -1,17 +1,29 @@
+import http from 'http'
 import Shatabdi from './lib/shatabdi'
 
 const app = new Shatabdi(0)
 
 app.get(
   '/',
-  () => console.log('~ this is a middleware'),
-  () => console.log('~ this is a callback'),
+  (req: any, res: any) => {
+    console.log('middleware hit')
+  },
+  (req: http.IncomingMessage, res: any) => {
+    res.status(400).json({
+      error: true,
+    })
+  },
 )
 
 app.get(
   '/home',
   () => console.log('~ this is a middleware'),
-  () => console.log('~ this is a callback'),
+  (req: any, res: any) => {
+    res.json({
+      route: 'home',
+      data: true,
+    })
+  },
 )
 
 /**
