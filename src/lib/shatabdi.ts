@@ -1,6 +1,7 @@
 import http from 'http'
 
 import { routeMap } from './shatabdi.interfaces'
+import Response from './response'
 
 require('dotenv').config()
 
@@ -32,22 +33,20 @@ class Shatabdi implements framework {
 
   private engine(req: http.IncomingMessage, res: http.ServerResponse, context: any) {
     this.request = req
-    this.response = res
+    this.response = new Response(res)
 
     context.routeMaps.forEach((route: any) => {
       if (route.pattern === req.url) {
         if (route.middleware) {
-          route.middleware()
-        } else {
-          route.callback()
+          route.middleware(req, res)
         }
-        res.writeHead(200)
-        res.write(`route ${route.pattern} called`)
-      } else {
-        console.log('Skipping : ', route.pattern)
+        if (route.callback) {
+          route.callback(req, res)
+        }
+        res.end()
       }
     })
-    res.end()
+
     console.log(`request hit as ${req.method} on ${req.url}`)
   }
 
@@ -58,6 +57,7 @@ class Shatabdi implements framework {
       pattern: patternString,
       middleware: middlewareHandler,
       callback: callbackHandler,
+      method: 'get',
     }
 
     this.routeMaps.push(routeItem)
@@ -70,6 +70,7 @@ class Shatabdi implements framework {
       pattern: patternString,
       middleware: middlewareHandler,
       callback: callbackHandler,
+      method: 'post',
     }
 
     this.routeMaps.push(routeItem)

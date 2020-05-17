@@ -1,6 +1,7 @@
 export interface routeMap {
-  pattern: string
   id: number
+  method: string
+  pattern: string
   middleware: any
   callback: any
 }
