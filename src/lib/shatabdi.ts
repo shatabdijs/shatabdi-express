@@ -1,15 +1,16 @@
 import http from 'http'
 
+import { routeMap } from './shatabdi.interfaces'
+
 require('dotenv').config()
 
-interface routeMap {
-  pattern: string
-  id: number
-  middleware: any
-  callback: any
+interface framework {
+  listen(port: number, callback?: any): void
+  get(urlPattern: string, middlewareHandler?: any, callbackHandler?: any): void
+  post(urlPattern: string, middlewareHandler?: any, callbackHandler?: any): void
 }
 
-class Shatabdi {
+class Shatabdi implements framework {
   private request: any | undefined
 
   private response: any | undefined
@@ -29,36 +30,54 @@ class Shatabdi {
     this.routeMaps = [...this.routeMaps]
   }
 
-  private engine(req: http.IncomingMessage, res: http.ServerResponse) {
+  private engine(req: http.IncomingMessage, res: http.ServerResponse, context: any) {
     this.request = req
     this.response = res
-    res.write('Hello World!')
+
+    context.routeMaps.forEach((route: any) => {
+      if (route.pattern === req.url) {
+        if (route.middleware) {
+          route.middleware()
+        } else {
+          route.callback()
+        }
+        res.writeHead(200)
+        res.write(`route ${route.pattern} called`)
+      } else {
+        console.log('Skipping : ', route.pattern)
+      }
+    })
     res.end()
-    console.log(`request hit as ${req.method} on ${req}`)
+    console.log(`request hit as ${req.method} on ${req.url}`)
   }
 
   public get(patternString: string, middlewareHandler?: any, callbackHandler?: any): void {
+    console.log('=> New route maps for path: ', patternString)
     const routeItem = {
       id: Date.now(),
       pattern: patternString,
       middleware: middlewareHandler,
       callback: callbackHandler,
     }
-    console.log('=> New route maps for path: ', routeItem.pattern)
-    if (middlewareHandler !== undefined) {
-      middlewareHandler()
-    }
 
-    if (callbackHandler !== undefined) {
-      callbackHandler()
+    this.routeMaps.push(routeItem)
+  }
+
+  public post(patternString: string, middlewareHandler?: any, callbackHandler?: any): void {
+    console.log('=> New route registered for path: ', patternString)
+    const routeItem = {
+      id: Date.now(),
+      pattern: patternString,
+      middleware: middlewareHandler,
+      callback: callbackHandler,
     }
 
     this.routeMaps.push(routeItem)
   }
 
-  listen(port: number, callback?: any): void {
+  public listen(port: number, callback?: any): void {
     try {
-      http.createServer(this.engine).listen(port || this.port)
+      http.createServer((req, res) => this.engine(req, res, this)).listen(port || this.port)
       if (callback) {
         callback()
       }
