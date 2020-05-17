@@ -2,30 +2,60 @@ import http from 'http'
 
 require('dotenv').config()
 
+interface routeMap {
+  pattern: string
+  id: number
+  middleware: any
+  callback: any
+}
+
 class Shatabdi {
-  req: any
+  private request: any | undefined
 
-  res: any
+  private response: any | undefined
 
-  port: string
+  private port: number | string
 
-  constructor() {
+  private routeMaps: routeMap[] = []
+
+  private mode: number
+
+  private server: http.Server
+
+  constructor(mode: number) {
+    this.mode = mode
+    this.server = http.createServer()
     this.port = `${process.env.PORT}`
+    this.routeMaps = [...this.routeMaps]
   }
 
-  engine(req: http.RequestOptions, res: http.ServerResponse) {
-    this.req = req
-    this.res = res
+  private engine(req: http.IncomingMessage, res: http.ServerResponse) {
+    this.request = req
+    this.response = res
     res.write('Hello World!')
     res.end()
+    console.log(`request hit as ${req.method} on ${req}`)
   }
 
-  /**
-   * function to listen for requests on port
-   * @param port port on which the app must listen for requests
-   * @param callback callback function to run when server is created
-   * @returns void
-   */
+  public get(patternString: string, middlewareHandler?: any, callbackHandler?: any): void {
+    const routeItem = {
+      id: Date.now(),
+      pattern: patternString,
+      middleware: middlewareHandler,
+      callback: callbackHandler,
+    }
+    console.log('=> New route maps for path: ', routeItem.pattern)
+    if (middlewareHandler !== undefined) {
+      middlewareHandler()
+    }
+
+    if (callbackHandler !== undefined) {
+      callbackHandler()
+    }
+
+    this.routeMaps.push(routeItem)
+  }
+
   listen(port: number, callback?: any): void {
     try {
       http.createServer(this.engine).listen(port || this.port)
