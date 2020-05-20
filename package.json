@@ -1,6 +1,6 @@
 {
   "name": "shatabdi-express",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "a faster express ?",
   "main": "dist/app.js",
   "scripts": {
