@@ -1,11 +1,12 @@
 import http from 'http'
 
-class Response {
+class Response extends http.ServerResponse {
   private response: http.ServerResponse
 
   private customStatus: number
 
-  constructor(responseObject: http.ServerResponse) {
+  constructor(requestObject: http.IncomingMessage, responseObject: http.ServerResponse) {
+    super(requestObject)
     this.customStatus = -1
     this.response = responseObject
     this.response.setHeader('X-Powered-By', 'shatabdi-express')
@@ -16,18 +17,16 @@ class Response {
     return this
   }
 
-  json(jsonObject: any) {
+  json(jsonObject: any): void {
     this.response.setHeader('Content-Type', 'application/json')
     this.response.write(JSON.stringify(jsonObject))
     this.response.end()
-    // return this.response
   }
 
-  send(stringData: string) {
+  send(stringData: string): void {
     this.response.setHeader('Content-Type', 'application/json')
     this.response.write(stringData)
     this.response.end()
-    // return this.response
   }
 }
 
