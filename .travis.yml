@@ -15,6 +15,6 @@ script:
 
 after_success:
   - echo "will push to docker here"
-#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-#   - docker build -t yashkumarverma/shatabdi-express .
-#   - docker push yashkumarverma/shatabdi-express
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t yashkumarverma/shatabdi-express .
+  - docker push yashkumarverma/shatabdi-express
