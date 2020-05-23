@@ -1,17 +1,11 @@
 import http from 'http'
 
-import { routeMap } from './shatabdi.interfaces'
+import { routeMap, layer } from './shatabdi.interfaces'
 import Response from './response'
 
 require('dotenv').config()
 
-interface framework {
-  listen(port: number, callback?: any): void
-  get(urlPattern: string, middlewareHandler?: any, callbackHandler?: any): void
-  post(urlPattern: string, middlewareHandler?: any, callbackHandler?: any): void
-}
-
-class Shatabdi implements framework {
+class Shatabdi {
   private request: any | undefined
 
   private response: any | undefined
@@ -31,49 +25,34 @@ class Shatabdi implements framework {
     this.routeMaps = [...this.routeMaps]
   }
 
+  public get(pattern: string, ...args: layer[]) {
+    if (arguments.length < 2) {
+      throw new Error('atleast one layer required to register route')
+    }
+
+    // all layers of particular route have same id
+    const id = Date.now()
+    for (let i = 0; i < args.length; i += 1) {
+      this.routeMaps.push({
+        id,
+        method: 'GET',
+        pattern,
+        layer: args[i],
+      })
+    }
+  }
+
   private engine(req: http.IncomingMessage, res: http.ServerResponse, context: any) {
     this.request = req
-    this.response = new Response(res)
+    this.response = new Response(req, res)
 
     context.routeMaps.forEach((route: any) => {
       if (route.pattern === req.url) {
-        if (route.middleware) {
-          route.middleware(req, new Response(res))
-        }
-        if (route.callback) {
-          route.callback(req, new Response(res))
-        }
-        res.end()
+        route.layer(req, new Response(req, res))
       }
     })
 
     console.log(`request hit as ${req.method} on ${req.url}`)
-  }
-
-  public get(patternString: string, middlewareHandler?: any, callbackHandler?: any): void {
-    console.log('=> New route maps for path: ', patternString)
-    const routeItem = {
-      id: Date.now(),
-      pattern: patternString,
-      middleware: middlewareHandler,
-      callback: callbackHandler,
-      method: 'get',
-    }
-
-    this.routeMaps.push(routeItem)
-  }
-
-  public post(patternString: string, middlewareHandler?: any, callbackHandler?: any): void {
-    console.log('=> New route registered for path: ', patternString)
-    const routeItem = {
-      id: Date.now(),
-      pattern: patternString,
-      middleware: middlewareHandler,
-      callback: callbackHandler,
-      method: 'post',
-    }
-
-    this.routeMaps.push(routeItem)
   }
 
   public listen(port: number, callback?: any): void {
