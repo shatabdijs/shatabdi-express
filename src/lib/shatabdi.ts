@@ -1,18 +1,21 @@
 import http from 'http'
 
-import { routeMap, layer } from './shatabdi.interfaces'
+import { layer, methods } from './router.interfaces'
+import { request } from './request.interface'
+import { response } from './response.interfaces'
 import Response from './response'
+import Router from './router'
 
 require('dotenv').config()
 
 class Shatabdi {
   private request: any | undefined
 
-  private response: any | undefined
+  private response: Response | undefined
+
+  private router: Router
 
   private port: number | string
-
-  private routeMaps: routeMap[] = []
 
   private mode: number
 
@@ -22,42 +25,38 @@ class Shatabdi {
     this.mode = mode
     this.server = http.createServer()
     this.port = `${process.env.PORT}`
-    this.routeMaps = [...this.routeMaps]
+    this.router = new Router()
   }
 
-  public get(pattern: string, ...args: layer[]) {
-    if (arguments.length < 2) {
-      throw new Error('atleast one layer required to register route')
-    }
-
-    // all layers of particular route have same id
-    const id = Date.now()
-    for (let i = 0; i < args.length; i += 1) {
-      this.routeMaps.push({
-        id,
-        method: 'GET',
-        pattern,
-        layer: args[i],
-      })
-    }
+  //   provide router function from same instance
+  public get(pattern: string, ...args: layer[]): void {
+    this.router.register(methods.GET, pattern, ...args)
   }
 
-  private engine(req: http.IncomingMessage, res: http.ServerResponse, context: any) {
+  public post(pattern: string, ...args: layer[]): void {
+    this.router.register(methods.POST, pattern, ...args)
+  }
+
+  public put(pattern: string, ...args: layer[]): void {
+    this.router.register(methods.PUT, pattern, ...args)
+  }
+
+  public delete(pattern: string, ...args: layer[]): void {
+    this.router.register(methods.DELETE, pattern, ...args)
+  }
+
+  private engine(req: request, res: http.ServerResponse) {
     this.request = req
     this.response = new Response(req, res)
 
-    context.routeMaps.forEach((route: any) => {
-      if (route.pattern === req.url) {
-        route.layer(req, new Response(req, res))
-      }
-    })
+    this.router.process(this.request, this.response)
 
-    console.log(`request hit as ${req.method} on ${req.url}`)
+    if (req.url !== '/favicon.ico') console.log(`request hit as ${req.method} on ${req.url}`)
   }
 
   public listen(port: number, callback?: any): void {
     try {
-      http.createServer((req, res) => this.engine(req, res, this)).listen(port || this.port)
+      http.createServer((req, res) => this.engine(req as request, res as http.ServerResponse)).listen(port || this.port)
       if (callback) {
         callback()
       }
