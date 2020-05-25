@@ -40,17 +40,6 @@ class Shatabdi {
 
     if (req.url !== '/favicon.ico') console.log(`request hit as ${req.method} on ${req.url}`)
   }
-
-  //   public listen(port: number, callback?: any): void {
-  //     try {
-  //       http.createServer((req, res) => this.engine(req as request, res as http.ServerResponse)).listen(port || this.port)
-  //       if (callback) {
-  //         callback()
-  //       }
-  //     } catch (e) {
-  //       console.log(e)
-  //     }
-  //   }
 }
 
 export default Shatabdi
