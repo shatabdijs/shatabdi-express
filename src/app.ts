@@ -38,9 +38,9 @@ app.get(
 app.get('/params/:one/:two/:three/end', (req, res) => {
   res.json(req.params)
 })
-/**
- * make app listen to port 3000
- */
-app.listen(3000, () => {
-  console.log('Listening on port 3000')
-})
+
+// app.listen(3000, () => {
+//   console.log('Listening on port 3000')
+// })
+
+export default app

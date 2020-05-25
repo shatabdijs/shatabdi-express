@@ -44,7 +44,7 @@ class Shatabdi {
     this.router.register(methods.DELETE, pattern, ...args)
   }
 
-  private engine(req: request, res: http.ServerResponse) {
+  public engine(req: request, res: http.ServerResponse) {
     this.request = req
     this.response = new Response(req, res)
 
