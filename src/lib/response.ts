@@ -24,7 +24,7 @@ class Response extends http.ServerResponse {
   }
 
   send(stringData: string): void {
-    this.response.setHeader('Content-Type', 'application/json')
+    this.response.setHeader('Content-Type', 'text/plain')
     this.response.write(stringData)
     this.response.end()
   }
