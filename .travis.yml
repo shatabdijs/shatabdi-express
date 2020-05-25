@@ -8,13 +8,16 @@ node_js:
 
 install:
   - npm install typescript
+  - npm install -g surge
 
 script:
   - npm run lint
   - npm run build
+  - npm run coverage
+  - npm run codecov
 
 after_success:
-  - echo "will push to docker here"
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker build -t yashkumarverma/shatabdi-express .
   - docker push yashkumarverma/shatabdi-express
+  - surge --project ./coverage/lcov-report --domain shatabdi-express-coverage.surge.sh
