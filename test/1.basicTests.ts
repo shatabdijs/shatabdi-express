@@ -22,15 +22,14 @@ describe(' => Testing Framework Components', () => {
    *  slashes and trimming tail slashes
    */
   it('Testing root directory attachment', (done) => {
-    try {
-      worker.get('/').then((resp) => {
+    worker
+      .get('/')
+      .then((resp) => {
         expect(resp.body.error).to.be.false
         expect(resp.body.message).to.be.a('string')
         done()
       })
-    } catch (error) {
-      done(error)
-    }
+      .catch((err) => done(err))
   })
 
   /**
@@ -54,16 +53,15 @@ describe(' => Testing Framework Components', () => {
    * multiple middlwares ( layers)
    */
   it('testing subsequent middleware usage', (done) => {
-    try {
-      worker.get('/multiple').then((resp) => {
+    worker
+      .get('/multiple')
+      .then((resp) => {
         expect(resp.status).to.equal(200)
         expect(resp.error).to.be.false
         expect(resp.body.finished).to.be.true
         done()
       })
-    } catch (error) {
-      done(error)
-    }
+      .catch((err) => done(err))
   })
 
   /**
@@ -71,16 +69,41 @@ describe(' => Testing Framework Components', () => {
    * and extract params from url
    */
   it('testing param extraction from request', (done) => {
-    try {
-      worker.get('/params/apple/mango/banana/end').then((resp) => {
+    worker
+      .get('/params/apple/mango/banana/end')
+      .then((resp) => {
         expect(resp.status).to.equal(200)
         expect(resp.body.one).to.equal('apple')
         expect(resp.body.two).to.equal('mango')
         expect(resp.body.three).to.equal('banana')
         done()
       })
-    } catch (error) {
-      done(error)
-    }
+      .catch((err) => done(err))
+  })
+
+  /**
+   * Check default 404 response
+   */
+  it('testing default 404 response if none matches', (done) => {
+    worker
+      .get('/yashkumarverma')
+      .then((resp) => {
+        expect(resp.status).to.equal(404)
+        done()
+      })
+      .catch((err) => done(err))
+  })
+
+  /**
+   * Check custom response code usage
+   */
+  it('testing custom response code', (done) => {
+    worker
+      .get('/response')
+      .then((resp) => {
+        expect(resp.status).to.equal(401)
+        done()
+      })
+      .catch((err) => done(err))
   })
 })

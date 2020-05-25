@@ -27,9 +27,9 @@ class Response {
    * @returns void
    */
   public register(method: methods, pattern: String, ...args: layer[]): void {
-    if (arguments.length < 2) {
-      throw new Error('at-least one layer required to register route')
-    }
+    // if (arguments.length < 2) {
+    //   throw new Error('at-least one layer required to register route')
+    // }
 
     // all layers of particular route have same id
     for (let i = 0; i < args.length; i += 1) {

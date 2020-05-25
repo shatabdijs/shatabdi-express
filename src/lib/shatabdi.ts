@@ -38,7 +38,7 @@ class Shatabdi {
 
     this.router.process(this.request, this.response)
 
-    if (req.url !== '/favicon.ico') console.log(`request hit as ${req.method} on ${req.url}`)
+    // if (req.url !== '/favicon.ico') console.log(`request hit as ${req.method} on ${req.url}`)
   }
 }
 

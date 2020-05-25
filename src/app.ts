@@ -51,6 +51,18 @@ app.get('/params/:one/:two/:three/end', (req, res) => {
 })
 
 /**
+ * Demonstrate sending custom response code
+ */
+app.get('/response', (req, res) => {
+  res.status(401).json({ status: 'unauthorized' })
+})
+
+/**
+ * Demonstrate that router doesn't break when no layer provided
+ */
+app.get('/something')
+
+/**
  * Export to be consumed by server.ts
  */
 export default app
