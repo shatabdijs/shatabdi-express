@@ -2,7 +2,6 @@ import http from 'http'
 
 import { layer, methods } from './router.interfaces'
 import { request } from './request.interface'
-import { response } from './response.interfaces'
 import Response from './response'
 import Router from './router'
 

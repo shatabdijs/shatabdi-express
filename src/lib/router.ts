@@ -65,10 +65,8 @@ class Response {
           }
         }
       })
-
-      res.status(200).json({ explodedUrl })
     } catch (e) {
-      res.status(500).json({ error: true })
+      console.log(e.message)
     }
   }
 }

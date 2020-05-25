@@ -36,7 +36,7 @@ app.get(
 )
 
 app.get('/params/:one/:two/:three/end', (req, res) => {
-  res.json({ error: false })
+  res.json(req.params)
 })
 /**
  * make app listen to port 3000
