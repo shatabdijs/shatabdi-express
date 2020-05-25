@@ -2,45 +2,55 @@ import Shatabdi from './lib/shatabdi'
 
 const app = new Shatabdi(0)
 
+/**
+ * Edge case of root url
+ */
+app.get('/', (req, res) => {
+  res.json({
+    error: false,
+    message: 'this is the root directory',
+  })
+})
+
+/**
+ * Setting custom headers from nth layer
+ */
 app.get(
   '/home',
-  (req, res, proceed) => {
-    res.setHeader('X-author', 'Yashkumarverma')
-  },
   (req, res) => {
-    console.log('rendering route reached')
-    res.status(200).json({ error: false })
+    res.setHeader('X-Author-Name', 'YashKumarVerma')
+    res.setHeader('X-Author-Email', 'yk.verma2000@gmail.com')
   },
+  (req, res) => res.send('Check Headers'),
 )
 
-// a simple display route
-app.get('/', (req, res) => res.json({ root: true, message: 'this is root directory' }))
-
+/**
+ * Using multiple layers and sending headers from each layer
+ */
 app.get(
   '/multiple',
   (req, res) => {
-    console.log('middleware 1 hit')
     res.setHeader('X-Middleware-1', 'true')
     return
   },
   (req, res) => {
-    console.log('middleware 2 hit')
     res.setHeader('X-Middleware-2', 'true')
     return
   },
   (req, res) => {
-    console.log('middleware 3 hit')
     res.setHeader('X-Middleware-3', 'true')
     res.json({ finished: true })
   },
 )
 
+/**
+ * Demonstrate data extraction from wildcard routes
+ */
 app.get('/params/:one/:two/:three/end', (req, res) => {
   res.json(req.params)
 })
 
-// app.listen(3000, () => {
-//   console.log('Listening on port 3000')
-// })
-
+/**
+ * Export to be consumed by server.ts
+ */
 export default app
