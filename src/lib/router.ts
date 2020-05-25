@@ -1,8 +1,6 @@
 import { layer, routeMap, methods } from './router.interfaces'
 import { response } from './response.interfaces'
 import { request } from './request.interface'
-import { url } from 'inspector'
-import { URL } from 'url'
 
 class Response {
   private routeMaps: routeMap[] = []
@@ -60,8 +58,10 @@ class Response {
             }
           }
 
+          //   when urls match successfully, feed data to request module
           if (!error) {
-            console.log(`Route matched, params extracted: `, params)
+            req.params = params
+            route.layer(req, res)
           }
         }
       })

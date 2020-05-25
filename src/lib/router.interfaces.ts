@@ -1,5 +1,5 @@
-import http from 'http'
 import { response } from './response.interfaces'
+import { request } from './request.interface'
 
 export const enum methods {
   'GET',
@@ -9,7 +9,7 @@ export const enum methods {
 }
 
 export interface layer {
-  (request: http.IncomingMessage, response: response, continueRequest?: boolean): void
+  (request: request, response: response, continueRequest?: boolean): void
 }
 
 export interface routeMap {
