@@ -20,3 +20,7 @@ dist/**/*
 .now
 *.log
 deployent
+
+# coverage 
+coverage
+.nyc_output
