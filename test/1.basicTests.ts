@@ -112,4 +112,37 @@ describe(' => Testing Framework Components', () => {
       })
       .catch((err) => done(err))
   })
+
+  /**
+   * Check that different method types don't trigger wrong routes
+   */
+  it('route registered as GET should reject request made as post', (done) => {
+    worker
+      .post('/home')
+      .then((resp) => {
+        expect(resp.status).to.equal(404)
+        done()
+      })
+      .catch((err) => done(err))
+  })
+
+  it('route registered as GET should reject request made as put', (done) => {
+    worker
+      .put('/home')
+      .then((resp) => {
+        expect(resp.status).to.equal(404)
+        done()
+      })
+      .catch((err) => done(err))
+  })
+
+  it('route registered as GET should reject request made as delete', (done) => {
+    worker
+      .delete('/home')
+      .then((resp) => {
+        expect(resp.status).to.equal(404)
+        done()
+      })
+      .catch((err) => done(err))
+  })
 })

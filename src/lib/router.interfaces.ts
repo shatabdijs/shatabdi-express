@@ -2,10 +2,10 @@ import { response } from './response.interfaces'
 import { request } from './request.interface'
 
 export const enum methods {
-  'GET',
-  'POST',
-  'PUT',
-  'DELETE',
+  GET = 'GET',
+  POST = 'POST',
+  PUT = 'PUT',
+  DELETE = 'DELETE',
 }
 
 export interface layer {

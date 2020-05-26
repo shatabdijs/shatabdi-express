@@ -58,6 +58,11 @@ class Response {
       const params: any = {}
       let error: Boolean = false
 
+      //   match request type
+      if (route.method !== req.method) {
+        return
+      }
+
       if (route.pattern.length === explodedUrl.length) {
         // proceed for checking each fragment one by one
         for (let i = 0; i < route.pattern.length; i += 1) {
