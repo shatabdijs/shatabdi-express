@@ -24,13 +24,10 @@ class Response {
    * @param pattern the url pattern to be matched for route
    * @param args the layer functions binded to route
    * @public
+   * @access public
    * @returns void
    */
   public register(method: methods, pattern: String, ...args: layer[]): void {
-    // if (arguments.length < 2) {
-    //   throw new Error('at-least one layer required to register route')
-    // }
-
     // all layers of particular route have same id
     for (let i = 0; i < args.length; i += 1) {
       this.routeMaps.push({
@@ -46,6 +43,8 @@ class Response {
    * The process method is used to match the incoming request to the registered route maps
    * @param req adapted request object of incoming http request
    * @param res adapted response object, to be passed to layers upon matching
+   * @public
+   * @access public
    */
   public process(req: request, res: response): void {
     let requestUrl: String = req?.url ?? '/'
