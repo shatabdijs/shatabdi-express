@@ -28,6 +28,10 @@ class Response extends http.ServerResponse {
     this.response.write(stringData)
     this.response.end()
   }
+
+  setHeader(name: string, value: string | number | string[]): void {
+    this.response.setHeader(name, value)
+  }
 }
 
 export default Response

@@ -36,13 +36,14 @@ describe(' => Testing Framework Components', () => {
    * Test if headers are successfully received when sent
    * from same router layer
    */
-  it('testing normal route operation', (done) => {
+  it('testing sending of multiple headers from single layer', (done) => {
     worker
       .get('/home')
       .then((resp) => {
         expect(resp.status).to.equal(200)
         expect(resp.error).to.be.false
-        console.log('Headers NOT RECEIVED')
+        expect(resp.header['x-author-name']).to.equal('YashKumarVerma')
+        expect(resp.header['x-author-email']).to.equal('yk.verma2000@gmail.com')
         done()
       })
       .catch((err) => console.log(err.message))
@@ -52,13 +53,18 @@ describe(' => Testing Framework Components', () => {
    * Test if headers are successfully set when done from
    * multiple middlwares ( layers)
    */
-  it('testing subsequent middleware usage', (done) => {
+  it('testing sending of multiple headers from multiple layer', (done) => {
     worker
       .get('/multiple')
       .then((resp) => {
         expect(resp.status).to.equal(200)
         expect(resp.error).to.be.false
         expect(resp.body.finished).to.be.true
+        expect(resp.header['x-middleware-1']).to.equal('true')
+        expect(resp.header['x-middleware-2']).to.equal('true')
+        expect(resp.header['x-middleware-3']).to.equal('true')
+        expect(resp.header['x-middleware-4']).to.equal('true')
+        expect(resp.header['x-middleware-5']).to.equal('true')
         done()
       })
       .catch((err) => done(err))

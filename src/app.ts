@@ -18,8 +18,8 @@ app.get('/', (req, res) => {
 app.get(
   '/home',
   (req, res) => {
-    res.setHeader('X-Author-Name', 'YashKumarVerma')
-    res.setHeader('X-Author-Email', 'yk.verma2000@gmail.com')
+    res.setHeader('x-author-name', 'YashKumarVerma')
+    res.setHeader('x-author-email', 'yk.verma2000@gmail.com')
   },
   (req, res) => res.send('Check Headers'),
 )
@@ -30,15 +30,17 @@ app.get(
 app.get(
   '/multiple',
   (req, res) => {
-    res.setHeader('X-Middleware-1', 'true')
+    res.setHeader('x-middleware-1', 'true')
+    res.setHeader('x-middleware-2', 'true')
     return
   },
   (req, res) => {
-    res.setHeader('X-Middleware-2', 'true')
+    res.setHeader('x-middleware-3', 'true')
+    res.setHeader('x-middleware-4', 'true')
     return
   },
   (req, res) => {
-    res.setHeader('X-Middleware-3', 'true')
+    res.setHeader('x-middleware-5', 'true')
     res.json({ finished: true })
   },
 )
