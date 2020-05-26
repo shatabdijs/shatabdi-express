@@ -1,13 +1,13 @@
 {
   "name": "shatabdi-express",
   "version": "0.2.1",
-  "description": "a faster express ?",
+  "description": "a toy framework",
   "main": "dist/app.js",
   "scripts": {
     "lint": "eslint ./src/**/*.ts --fix",
     "build": "tsc",
     "server": "nodemon",
-    "start": "node ./dist/app.js",
+    "start": "node ./dist/src/server.js",
     "test": "./node_modules/mocha/bin/mocha --sort --require ts-node/register --timeout 1000 --exit ./test/*.ts",
     "coverage": "nyc --reporter=lcov npm run test",
     "codecov": "codecov"

@@ -18,7 +18,7 @@ script:
 
 after_success:
   - echo "SKIP DOCKER FOR FASTER BUILDS"
-#   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-#   - docker build -t yashkumarverma/shatabdi-express .
-#   - docker push yashkumarverma/shatabdi-express
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t yashkumarverma/shatabdi-express .
+  - docker push yashkumarverma/shatabdi-express
   - surge --project ./coverage/lcov-report --domain shatabdi-express-coverage.surge.sh
